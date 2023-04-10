@@ -4,10 +4,58 @@
 
 int extraMemoryAllocated;
 
+//Helps Heap Sort by turning binary tree into a Max-heap
+void heapify(int pData[], int n, int i) 
+{
+  int largest, leftNode, rightNode, temp;
+  largest = i;
+  leftNode = (2 * i + 1);
+  rightNode = (2 * i + 2);
+
+  if (leftNode < n && pData[leftNode] > pData[largest])
+  {
+    largest = leftNode;
+  }
+
+  if (rightNode < n && pData[rightNode] > pData[largest])
+  {
+    largest = rightNode;
+  }
+    
+
+    if (largest != i) 
+	{
+
+	  temp = pData[i];
+	  pData[i] = pData[largest];
+	  pData[largest] = temp;
+
+      heapify(pData, n, largest);
+
+  	}
+
+}
+
+
 // implements heap sort
 // extraMemoryAllocated counts bytes of memory allocated
-void heapSort(int arr[], int n)
+void heapSort(int pData[], int n)
 {
+	int temp;
+	for (int i = (n/2 - 1); i >= 0; i--)
+	{
+		heapify(pData, n, i);
+	}
+
+	for (int i = n -1; i >= 0; i--)
+	{
+		temp = pData[0];
+	  	pData[0] = pData[i];
+	  	pData[i] = temp;
+
+		heapify(pData, i, 0;);
+	}
+
 }
 
 
@@ -15,6 +63,66 @@ void heapSort(int arr[], int n)
 // extraMemoryAllocated counts bytes of extra memory allocated
 void mergeSort(int pData[], int l, int r)
 {
+	if (r > l)
+  {
+	 int mid_pt = ((l+r)/2);
+    mergeSort(pData, l, mid_pt);
+    mergeSort(pData, (mid_pt+1), r);
+   
+    //merge:
+    int a, b, c;
+    int tmp_size = mid_pt - l + 1;
+    int tmp_size2 = r - mid_pt;
+  
+    int *tmp1 = (int*) malloc(tmp_size * sizeof(int));
+	extraMemoryAllocated += tmp_size * sizeof(int);
+    int *tmp2 = (int*) malloc(tmp_size2 * sizeof(int));
+	extraMemoryAllocated += tmp_size2 * sizeof(int);
+  
+    for (a = 0; a < tmp_size; a++)
+      {
+        tmp1[a] = pData[l + a];
+      }
+    
+    for (b = 0; b < tmp_size2; b++)
+      {
+        tmp2[b] = pData[(mid_pt + 1) + b];
+      }
+    
+    a = 0; 
+    b = 0; 
+    c = l; 
+    while (a < tmp_size && b < tmp_size2)
+    {
+      if (tmp1[a] <= tmp2[b])
+        {
+          pData[c] = tmp1[a];
+          a++;
+        }
+      else
+        {
+          pData[c] = tmp2[b];
+          b++;
+        }
+      c++;
+    }
+    
+    while (a < tmp_size)
+    {
+      pData[c] = tmp1[a];
+      a++;
+      c++;
+    }
+    
+    while (b < tmp_size2)
+    { 
+      pData[c] = tmp2[b];
+      b++;
+      c++;
+    }
+    free(tmp1);
+    free(tmp2);
+  }
 }
 
 // parses input file to an integer array
